@@ -1,0 +1,30 @@
+body {
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #fff;
+}
+
+.scratch-container {
+  text-align: center;
+  background: #222;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px gold;
+}
+
+canvas {
+  background: gold;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.reward {
+  margin-top: 15px;
+  font-size: 18px;
+  min-height: 50px;
+}
