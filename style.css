@@ -1,30 +1,60 @@
-body {
-  background: #111;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  font-family: Arial, sans-serif;
-  color: #fff;
+const rewards = [
+  { text: "🎉 Congratulations! You get 5% Off\nCoupon Code: SPSCRATCH5", weight: 40 },
+  { text: "🎉 Woah! 10% off\nCoupon Code: SPSCRATCH10", weight: 10 },
+  { text: "🎁 Free 15ml Tester\nCoupon: SPTEST15", weight: 10 },
+  { text: "😢 Better luck next time!", weight: 40 },
+  { text: "👨‍💻 Hacker! Rs 100 off\nSPSCRATCH100", weight: 10 }
+];
+
+// Weighted random pick
+function pickReward() {
+  const totalWeight = rewards.reduce((acc, r) => acc + r.weight, 0);
+  const rand = Math.random() * totalWeight;
+  let sum = 0;
+  for (let r of rewards) {
+    sum += r.weight;
+    if (rand <= sum) return r;
+  }
 }
 
-.scratch-container {
-  text-align: center;
-  background: #222;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 0 15px gold;
+const reward = pickReward();
+const rewardDiv = document.getElementById("reward");
+rewardDiv.innerText = reward.text;
+
+const canvas = document.getElementById("scratchCanvas");
+const ctx = canvas.getContext("2d");
+
+let isDrawing = false;
+
+const image = new Image();
+image.src = 'assets/mask.png';
+image.onload = () => ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+canvas.addEventListener("mousedown", () => isDrawing = true);
+canvas.addEventListener("mouseup", () => isDrawing = false);
+canvas.addEventListener("mousemove", scratch);
+
+function scratch(e) {
+  if (!isDrawing) return;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.arc(x, y, 15, 0, 2 * Math.PI);
+  ctx.fill();
+
+  if (getScratchedPercent() > 40) {
+    rewardDiv.classList.remove("hidden");
+  }
 }
 
-canvas {
-  background: gold;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
-
-.reward {
-  margin-top: 15px;
-  font-size: 18px;
-  min-height: 50px;
+function getScratchedPercent() {
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  let cleared = 0;
+  for (let i = 0; i < imageData.data.length; i += 4) {
+    if (imageData.data[i + 3] === 0) cleared++;
+  }
+  return (cleared / (canvas.width * canvas.height)) * 100;
 }
