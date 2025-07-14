@@ -1,72 +1,64 @@
-const rewards = [
-  {
-    text: "🎉 Congratulations! You get 5% Off on orders above Rs 399<br>Coupon Code - <b>SPSCRATCH5</b>",
-    weight: 40
-  },
-  {
-    text: "🎉 Woah! You get a stunning 10% off on orders above Rs 399<br>Coupon Code - <b>SPSCRATCH10</b>",
-    weight: 10
-  },
-  {
-    text: "🎁 Free! You got a 15ml Tester worth Rs 499<br>Coupon Code - <b>SPTEST15</b>",
-    weight: 10
-  },
-  {
-    text: "😢 Better luck next time. Your luck can be bad sometimes, but our Perfumes never!",
-    weight: 40
-  },
-  {
-    text: "👨‍💻 Hacker or What! You get Rs 100 off<br>Coupon Code - <b>SPSCRATCH100</b>",
-    weight: 10
-  }
-];
-
-// Weighted random selection
-function getRandomReward() {
-  const total = rewards.reduce((acc, r) => acc + r.weight, 0);
-  const rand = Math.random() * total;
-  let sum = 0;
-  for (let r of rewards) {
-    sum += r.weight;
-    if (rand <= sum) return r;
-  }
+body {
+  background: radial-gradient(circle, #111, #000);
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-const canvas = document.getElementById("scratch-canvas");
-const ctx = canvas.getContext("2d");
-const rewardText = document.getElementById("reward-text");
-
-const reward = getRandomReward();
-rewardText.innerHTML = reward.text;
-rewardText.style.visibility = "hidden";
-
-// Scratch mask
-ctx.fillStyle = "#c2b280"; // gold-ish scratch color
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-canvas.addEventListener("mousemove", scratch);
-canvas.addEventListener("mousedown", () => isDrawing = true);
-canvas.addEventListener("mouseup", () => isDrawing = false);
-
-let isDrawing = false;
-function scratch(e) {
-  if (!isDrawing) return;
-  const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  ctx.clearRect(x, y, 20, 20);
-
-  if (getScratchPercent() > 40) {
-    rewardText.style.visibility = "visible";
-  }
+.card-wrapper {
+  text-align: center;
 }
 
-// Calculates how much area is scratched
-function getScratchPercent() {
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  let scratched = 0;
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    if (imageData.data[i + 3] === 0) scratched++;
-  }
-  return (scratched / (canvas.width * canvas.height)) * 100;
+.scratch-card {
+  position: relative;
+  width: 350px;
+  height: 200px;
+  background: url('assets/golden-bg.jpg') no-repeat center/cover;
+  border-radius: 20px;
+  box-shadow: 0 0 20px gold;
+  overflow: hidden;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 20px;
+}
+
+.reward-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+  padding: 10px;
+  max-width: 80%;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+button {
+  margin-top: 20px;
+  background: gold;
+  color: #111;
+  padding: 10px 25px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 10px gold;
 }
