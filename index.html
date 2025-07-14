@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scratch & Win</title>
+  <title>Golden Scratch Card</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="scratch-container">
-    <canvas id="scratch-canvas" width="300" height="150"></canvas>
-    <div id="reward-text" class="reward"></div>
-    <button onclick="window.location.reload()">Try Again</button>
+  <div class="card-wrapper">
+    <div class="scratch-card">
+      <canvas id="scratchCanvas" width="350" height="200"></canvas>
+      <div id="reward" class="reward-content hidden"></div>
+    </div>
+    <button onclick="location.reload()">Try Again</button>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
